@@ -19,30 +19,36 @@ class Currency {
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var selectedRow: IndexPath?
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:CurrencyTableCell = self.tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyTableCell
         let text = currency[indexPath.section].currencyList?[indexPath.row]
         cell.currencyLabel.text = text
         cell.tintColor = UIColor(named: "PrimaryColor")
+        /*
         if text == "USD" {
             cell.accessoryType = .checkmark
         }
+        */
+        
+        cell.accessoryType = self.selectedRow == indexPath ? .checkmark : .none
+        
         return cell
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.barTintColor = UIColor(named: "PrimaryColor")
+        navigationController?.title = "Choose currency"
+        tableView.allowsSelection = true
+        tableView.allowsMultipleSelection = false
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return currency[section].currencyList?.count ?? 0
     }
-        
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return currency[section].sectionName
-    }
-        
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
@@ -54,12 +60,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let lbl = UILabel(frame: CGRect(x: 15, y: 0, width: view.frame.width - 15, height: 40))
         lbl.text = currency[section].sectionName
         lbl.textColor = UIColor(named: "BackgroundColor")
+        view.addSubview(lbl)
         return view
     }
     
+    //  DELETE
+    /*
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    */
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        navigationController?.popViewController(animated: true)
+        selectedRow = indexPath
+        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+        tableView.reloadData()
     }
     /*
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
