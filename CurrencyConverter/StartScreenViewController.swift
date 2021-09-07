@@ -36,7 +36,7 @@ class StartScreenViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        requestToAPI()             
+        requestToAPI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
