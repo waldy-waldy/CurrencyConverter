@@ -34,6 +34,7 @@ class CurrencyListViewController: UIViewController, UITableViewDelegate, UITable
 
     //VARIABLES
     
+    var allCurrency = [String]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var selectedRow: IndexPath?
     var toFromString: String = ""
@@ -62,6 +63,7 @@ class CurrencyListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Очистить недавние", style: .done, target: self, action: #selector(clearLatest(sender:)))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,6 +84,7 @@ class CurrencyListViewController: UIViewController, UITableViewDelegate, UITable
             currencyList = try context.fetch(CurrencyEntity.fetchRequest())
             for item in currencyList {
                 currency[1].currencyList?.append(CurrencyMainInfo(code: item.code!, name: item.name!, date: nil))
+                allCurrency.append(item.code!)
             }
             currency[1].currencyList = currency[1].currencyList?.sorted(by: { $0.code < $1.code })
         }
@@ -95,7 +98,9 @@ class CurrencyListViewController: UIViewController, UITableViewDelegate, UITable
             currency[0].currencyList?.removeAll()
             currencyLatestList = try context.fetch(LatestCurrency.fetchRequest())
             for item in currencyLatestList {
-                currency[0].currencyList?.append(CurrencyMainInfo(code: item.code!, name: item.name!, date: item.date))
+                if (allCurrency.contains(item.code!)) {
+                    currency[0].currencyList?.append(CurrencyMainInfo(code: item.code!, name: item.name!, date: item.date))
+                }
             }
             currency[0].currencyList = currency[0].currencyList?.sorted(by: { $0.date! > $1.date! })
         }
@@ -133,7 +138,21 @@ class CurrencyListViewController: UIViewController, UITableViewDelegate, UITable
              try context.save()
          }
          catch {
-                 
+            context.rollback()
+         }
+    }
+    
+    func deleteItemByCode(deleteItemString: String) {
+        let tmpCurr = currencyLatestList.first(where: {$0.code == deleteItemString})! as LatestCurrency
+        if (tmpCurr != nil) {
+            deleteItem(deleteItem: tmpCurr)
+        }
+             
+         do {
+             try context.save()
+         }
+         catch {
+            context.rollback()
          }
     }
     
@@ -229,5 +248,46 @@ class CurrencyListViewController: UIViewController, UITableViewDelegate, UITable
         
     func numberOfSections(in tableView: UITableView) -> Int {
         return currency.count
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if indexPath.row > 5 {
+            return UITableViewCell.EditingStyle.none
+        }
+        else {
+            return UITableViewCell.EditingStyle.delete
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if (indexPath.section == 0) {
+            return true
+        }
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+            let cell = tableView.cellForRow(at: indexPath) as? CurrencyTableCell
+            deleteItemByCode(deleteItemString: (cell?.currencyLabel.text)!)
+            getAllLatestItems()
+            tableView.reloadData()
+        }
+    }
+    
+    @objc func clearLatest(sender: UIBarButtonItem) {
+        do {
+            currency[0].currencyList?.removeAll()
+            currencyLatestList = try context.fetch(LatestCurrency.fetchRequest())
+            for item in currencyLatestList {
+                context.delete(item)
+            }
+            tableView.reloadData()
+            try context.save()
+        }
+        catch {
+            context.rollback()
+        }
+        
     }
 }

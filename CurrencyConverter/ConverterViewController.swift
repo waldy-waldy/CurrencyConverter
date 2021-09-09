@@ -45,6 +45,7 @@ class ConverterViewController: UIViewController, UITextFieldDelegate {
     var segueType = "From"
     var currencyList = [CurrencyEntity]()
     var currentCurrencyList = [CurrentCurrency]()
+    var allCurrencyList = [String]()
     var currencyValueFrom = 0.00
     var currencyValueTo = 0.00
     var currencyValueFromTo = 0.00
@@ -81,6 +82,7 @@ class ConverterViewController: UIViewController, UITextFieldDelegate {
     }
     
     func takeData() {
+        getAllItems()
         getCurrentItem()
         currencyValueFrom = getItemByCode(code: currencyCodeFrom)
         currencyValueTo = getItemByCode(code: currencyCodeTo)
@@ -174,6 +176,18 @@ class ConverterViewController: UIViewController, UITextFieldDelegate {
         
     //CORE DATA
     
+    func getAllItems() {
+        do {
+            let tmpCurrencyList = try context.fetch(CurrencyEntity.fetchRequest()) as [CurrencyEntity]
+            for item in tmpCurrencyList {
+                allCurrencyList.append(item.code!)
+            }
+        }
+        catch {
+            context.rollback()
+        }
+    }
+    
     func reloadCurrentData(codeFrom: String, codeTo: String, value: Double) {
         do {
             currentCurrencyList = try context.fetch(CurrentCurrency.fetchRequest())
@@ -214,8 +228,18 @@ class ConverterViewController: UIViewController, UITextFieldDelegate {
             }
             currentCurrencyList = try context.fetch(CurrentCurrency.fetchRequest())
             if (currentCurrencyList.count > 0) {
-                currencyCodeFrom = (currentCurrencyList.first?.codeFrom)!
-                currencyCodeTo = (currentCurrencyList.first?.codeTo)!
+                if allCurrencyList.contains((currentCurrencyList.first?.codeFrom)!) {
+                    currencyCodeFrom = (currentCurrencyList.first?.codeFrom)!
+                }
+                else {
+                    currencyCodeFrom = allCurrencyList.randomElement()!
+                }
+                if allCurrencyList.contains((currentCurrencyList.first?.codeTo)!) {
+                    currencyCodeTo = (currentCurrencyList.first?.codeTo)!
+                }
+                else {
+                    currencyCodeTo = allCurrencyList.randomElement()!
+                }
                 currencyValue = currentCurrencyList.first!.lastValue
             }
             else {
@@ -247,7 +271,7 @@ class ConverterViewController: UIViewController, UITextFieldDelegate {
     
     func clearItems() {
         do {
-            let items = try context.fetch(CurrencyEntity.fetchRequest()) as! [NSManagedObject]
+            let items = try context.fetch(CurrencyEntity.fetchRequest()) as! [CurrencyEntity]
             for item in items {
                 context.delete(item)
             }
