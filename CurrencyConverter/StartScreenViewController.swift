@@ -11,29 +11,36 @@ import Alamofire
 import CoreData
 
 class CurrencyInfo {
-    var currencyName: String
-    var isSell: Bool
-    var currencyValue: Double
+    var code: String
+    var rate: Double
+    var name: String
     
-    init(currencyName: String, isSell: Bool, currencyValue: Double) {
-        self.currencyName = currencyName
-        self.isSell = isSell
-        self.currencyValue = currencyValue
+    init(code: String, rate: Double, name: String){
+        self.code = code
+        self.rate = rate
+        self.name = name
     }
 }
 
 class StartScreenViewController: UIViewController {
 
+    //OUTLETS
+    
     @IBOutlet weak var repeatButton: UIButton!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var cancelExitButton: UIButton!
     @IBOutlet var MainView: UIView!
+
+    //VARIABLES
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    let url = "https://belarusbank.by/api/kursExchange"
+    let url = "https://www.floatrates.com/daily/byn.json"
     var currencyValues: [CurrencyInfo] = [CurrencyInfo]()
     var currencyList = [CurrencyEntity]()
+    var itemsCount = 0
 
+    //VIEW
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         requestToAPI()
@@ -42,7 +49,6 @@ class StartScreenViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = true
-        requestToAPI()
     }
         
     override func viewWillDisappear(_ animated: Bool) {
@@ -50,6 +56,8 @@ class StartScreenViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = false
     }
 
+    //ACTIONS
+    
     @IBAction func repeatButtonDidTap(_ sender: Any) {
         hideButtons()
         requestToAPI()
@@ -57,21 +65,13 @@ class StartScreenViewController: UIViewController {
     
     @IBAction func cancelExitButtonDidTap(_ sender: Any) {
         hideButtons()
-        getAllItems()
-        if (currencyList.count == 0){
+        if (itemsCount == 0){
             exit(0)
-        }
-        else {
-            performSegue(withIdentifier: "showConverterPage", sender: self)
-            //go to next page
-            /*
-            for item in checkArray {
-                print(item.currencyName! + " ------- " + String(item.currencyValue))
-            }
-            */
         }
     }
     
+    //API
+        
     func requestToAPI() {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
@@ -79,32 +79,20 @@ class StartScreenViewController: UIViewController {
         AF.request(self.url).responseJSON { [self] response in
             switch response.result {
                 case .success(let value):
-                    if let res = value as? [[String: String]] {
-                        if let data = res[0] as [String: String]? {
-                            for elem in data {
-                                if let rate = Double(elem.value) {
-                                    var sell = true
-                                    if (elem.key.contains("in")){
-                                        sell = false
-                                    }
-                                    let currencyTemp = CurrencyInfo(currencyName: elem.key, isSell: sell, currencyValue: rate)
-                                    createItem(newItem: currencyTemp)
-                                    currencyValues.append(currencyTemp)
-                                }
-                            }
-                            loadingNotification.hide(animated: true)
-                            //performSegue(withIdentifier: "showConverterPage", sender: self)
-                            showButtons()
-                        }
-                        else {
-                            loadingNotification.hide(animated: true)
-                            showButtons()
+                    if let data = value as? [String: Any] {
+                        clearItems()
+                        createItem(newItem: CurrencyInfo(code: "BYN", rate: 1.00, name: "Belarussian Ruble"))
+                        for item in data.keys {
+                            let info = data[item] as? [String: Any]
+                            let code = info?["code"] as! String
+                            let name = info?["name"] as! String
+                            let rate = info?["inverseRate"] as! Double
+                            let currencyTemp = CurrencyInfo(code: code, rate: rate, name: name)
+                            createItem(newItem: currencyTemp)
                         }
                     }
-                    else {
-                        loadingNotification.hide(animated: true)
-                        showButtons()
-                    }
+                    loadingNotification.hide(animated: true)
+                    goToTheNextPage()
                 case .failure(_):
                     loadingNotification.hide(animated: true)
                     showButtons()
@@ -112,10 +100,26 @@ class StartScreenViewController: UIViewController {
         }
     }
         
+    //PAGE
+    
+    func goToTheNextPage(){
+        let converterViewController = storyboard?.instantiateViewController(identifier: "ConverterViewController")
+        navigationController?.pushViewController(converterViewController!, animated: true)
+    }
+    
+    //BUTTONS VISIBILITY
+    
     func showButtons() {
         self.messageLabel.isHidden = false
         self.repeatButton.isHidden = false
         self.cancelExitButton.isHidden = false
+        getItemsCount()
+        if (itemsCount == 0){
+            cancelExitButton.setTitle("Выйти из приложения", for: .normal)
+        }
+        else {
+            cancelExitButton.setTitle("Отменить запрос", for: .normal)
+        }
     }
         
     func hideButtons() {
@@ -123,13 +127,15 @@ class StartScreenViewController: UIViewController {
         self.repeatButton.isHidden = true
         self.cancelExitButton.isHidden = true
     }
-        
-    func getAllItems() {
+    
+    //CORE DATA
+    
+    func getItemsCount(){
         do {
-            currencyList = try context.fetch(CurrencyEntity.fetchRequest())
+            itemsCount = try context.fetch(CurrencyEntity.fetchRequest()).count
         }
         catch {
-                
+            
         }
     }
         
@@ -142,51 +148,21 @@ class StartScreenViewController: UIViewController {
             try context.save()
         }
         catch {
-            
+            context.rollback()
         }
     }
         
     func createItem(newItem: CurrencyInfo) {
         let tempItem = CurrencyEntity(context: context)
-        tempItem.currencyName = newItem.currencyName
-        tempItem.isSell = newItem.isSell
-        tempItem.currencyValue = newItem.currencyValue
+        tempItem.code = newItem.code
+        tempItem.rate = newItem.rate
+        tempItem.name = newItem.name
         
         do {
             try context.save()
         }
         catch {
-                
-        }
-    }
-        
-    func deleteItem(deleteItem: CurrencyEntity) {
-        context.delete(deleteItem)
-            
-        do {
-            try context.save()
-        }
-        catch {
-                
-        }
-    }
-        
-    func updateItem(updateItem: CurrencyEntity, newItem: CurrencyInfo) {
-        updateItem.currencyName = newItem.currencyName
-        updateItem.isSell = newItem.isSell
-        updateItem.currencyValue = newItem.currencyValue
-            
-        do {
-            try context.save()
-        }
-        catch {
-                
-        }
-    }
-        
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? ConverterViewController {
-            destination.currencyList = currencyList
+            context.rollback()
         }
     }
 }

@@ -2,7 +2,7 @@
 //  CurrencyEntity+CoreDataProperties.swift
 //  
 //
-//  Created by neoviso on 9/3/21.
+//  Created by neoviso on 9/8/21.
 //
 //
 
@@ -16,8 +16,8 @@ extension CurrencyEntity {
         return NSFetchRequest<CurrencyEntity>(entityName: "CurrencyEntity")
     }
 
-    @NSManaged public var currencyName: String?
-    @NSManaged public var currencyValue: Double
-    @NSManaged public var isSell: Bool
+    @NSManaged public var code: String?
+    @NSManaged public var rate: Double
+    @NSManaged public var name: String?
 
 }

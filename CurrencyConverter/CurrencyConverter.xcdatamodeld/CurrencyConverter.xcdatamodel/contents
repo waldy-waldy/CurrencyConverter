@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CurrencyEntity" representedClassName="CurrencyEntity" syncable="YES">
-        <attribute name="currencyName" optional="YES" attributeType="String"/>
-        <attribute name="currencyValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="isSell" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="code" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="rate" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CurrentCurrency" representedClassName="CurrentCurrency" syncable="YES">
+        <attribute name="codeFrom" optional="YES" attributeType="String"/>
+        <attribute name="codeTo" optional="YES" attributeType="String"/>
+        <attribute name="lastValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="LatestCurrency" representedClassName="LatestCurrency" syncable="YES">
+        <attribute name="code" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
     <elements>
         <element name="CurrencyEntity" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="LatestCurrency" positionX="-63" positionY="9" width="128" height="88"/>
+        <element name="CurrentCurrency" positionX="-63" positionY="18" width="128" height="88"/>
     </elements>
 </model>

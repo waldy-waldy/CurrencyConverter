@@ -54,6 +54,7 @@
                                 </state>
                                 <connections>
                                     <action selector="cancelExitButtonDidTap:" destination="5lr-Nz-odj" eventType="touchUpInside" id="Yfh-yO-vu3"/>
+                                    <segue destination="ebP-sR-mxh" kind="show" identifier="showConverterPage" id="aZD-vZ-js3"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -65,7 +66,6 @@
                         <outlet property="cancelExitButton" destination="4hE-Ht-0Fc" id="7uK-Gb-H8I"/>
                         <outlet property="messageLabel" destination="FLG-oD-Sk1" id="zgr-hN-t12"/>
                         <outlet property="repeatButton" destination="x07-nO-5lZ" id="ORV-6L-dVM"/>
-                        <segue destination="ebP-sR-mxh" kind="show" identifier="showConverterPage" id="uF7-xt-FjP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wpt-y1-QV2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -75,12 +75,12 @@
         <!--Converter View Controller-->
         <scene sceneID="R5K-D9-OPe">
             <objects>
-                <viewController id="ebP-sR-mxh" customClass="ConverterViewController" customModule="CurrencyConverter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConverterViewController" id="ebP-sR-mxh" customClass="ConverterViewController" customModule="CurrencyConverter" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Pgr-Oz-NWx">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите сумму" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Od5-xm-crc">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1000" borderStyle="roundedRect" placeholder="Введите сумму" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Od5-xm-crc">
                                 <rect key="frame" x="20" y="108" width="374" height="36"/>
                                 <color key="textColor" name="BackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -89,7 +89,7 @@
                                     <action selector="valueTextFieldDidChange:" destination="ebP-sR-mxh" eventType="editingChanged" id="7Xg-dA-JBB"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8mF-x3-PbJ">
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8mF-x3-PbJ">
                                 <rect key="frame" x="130.5" y="164" width="263.5" height="53"/>
                                 <color key="backgroundColor" name="PrimaryColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
@@ -97,10 +97,11 @@
                                     <color key="titleColor" name="BackgroundColor"/>
                                 </state>
                                 <connections>
+                                    <action selector="fromToBtnDidTap:" destination="ebP-sR-mxh" eventType="touchUpInside" id="WZT-op-Cqc"/>
                                     <segue destination="BYZ-38-t0r" kind="show" identifier="showCurrencyFrom" id="RZq-a0-GEH"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="baz-WC-0HV">
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="baz-WC-0HV">
                                 <rect key="frame" x="130.5" y="237" width="263.5" height="53"/>
                                 <color key="backgroundColor" name="PrimaryColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
@@ -108,6 +109,7 @@
                                     <color key="titleColor" name="BackgroundColor"/>
                                 </state>
                                 <connections>
+                                    <action selector="fromToBtnDidTap:" destination="ebP-sR-mxh" eventType="touchUpInside" id="Z1N-IN-GcD"/>
                                     <segue destination="BYZ-38-t0r" kind="show" identifier="showCurrencyTo" id="qsQ-Tg-4iT"/>
                                 </connections>
                             </button>
@@ -151,8 +153,8 @@
                                 <color key="textColor" name="PrimaryColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i14-z0-MwG">
-                                <rect key="frame" x="20" y="449" width="374" height="323"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i14-z0-MwG">
+                                <rect key="frame" x="20" y="442" width="374" height="330"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EUR -&gt; 2.8400" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9ym-5T-awJ">
                                         <rect key="frame" x="20" y="116" width="334" height="32"/>
@@ -232,11 +234,18 @@
                             <constraint firstItem="VtI-c6-Tj3" firstAttribute="leading" secondItem="l7t-Ko-a3k" secondAttribute="leading" constant="20" id="rOx-CQ-vpA"/>
                             <constraint firstItem="l7t-Ko-a3k" firstAttribute="trailing" secondItem="HKn-K0-JIn" secondAttribute="trailing" constant="20" id="wll-Na-ZaF"/>
                             <constraint firstItem="i14-z0-MwG" firstAttribute="top" secondItem="Jj3-LC-3Le" secondAttribute="bottom" constant="20" id="xE8-Gr-VQU"/>
+                            <constraint firstItem="l7t-Ko-a3k" firstAttribute="bottom" secondItem="i14-z0-MwG" secondAttribute="bottom" constant="90" id="ytt-v3-PcX"/>
                             <constraint firstItem="l7t-Ko-a3k" firstAttribute="trailing" secondItem="baz-WC-0HV" secondAttribute="trailing" constant="20" id="zNq-gN-NLn"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="eTU-FS-Rg3"/>
                     <connections>
+                        <outlet property="currencyFromButton" destination="8mF-x3-PbJ" id="HzI-PE-4Zw"/>
+                        <outlet property="currencyRateFrom" destination="HSm-0i-LFI" id="BSd-XR-9AH"/>
+                        <outlet property="currencyRateFromTo" destination="848-PE-OdH" id="16T-uy-nS2"/>
+                        <outlet property="currencyRateTo" destination="9ym-5T-awJ" id="oNs-mm-ls3"/>
+                        <outlet property="currencyRateToFrom" destination="ciH-gP-LmR" id="pla-3h-1TL"/>
+                        <outlet property="currencyToButton" destination="baz-WC-0HV" id="XXN-uE-lPu"/>
                         <outlet property="resultLabel" destination="Jj3-LC-3Le" id="yME-mP-dXb"/>
                         <outlet property="valueTextField" destination="Od5-xm-crc" id="eXa-VX-bmD"/>
                     </connections>
@@ -245,10 +254,10 @@
             </objects>
             <point key="canvasLocation" x="318.84057971014494" y="125.89285714285714"/>
         </scene>
-        <!--View Controller-->
+        <!--Currency List View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="CurrencyConverter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="CurrencyListViewController" customModule="CurrencyConverter" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -268,19 +277,32 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qxs-46-Kki">
-                                                    <rect key="frame" x="20" y="11" width="374" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="(United States Dollar)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CAv-gd-n8R">
+                                                    <rect key="frame" x="74" y="8" width="320" height="27"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" name="PrimaryColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qxs-46-Kki">
+                                                    <rect key="frame" x="15" y="8" width="44" height="26.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                     <color key="textColor" name="PrimaryColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="CAv-gd-n8R" firstAttribute="top" secondItem="Hxd-BP-OLa" secondAttribute="top" constant="8" id="WGP-cH-d0r"/>
+                                                <constraint firstItem="qxs-46-Kki" firstAttribute="top" secondItem="Hxd-BP-OLa" secondAttribute="top" constant="8" id="lg2-nM-bDl"/>
+                                                <constraint firstItem="CAv-gd-n8R" firstAttribute="leading" secondItem="qxs-46-Kki" secondAttribute="trailing" constant="15" id="oJl-RW-41y"/>
+                                                <constraint firstItem="qxs-46-Kki" firstAttribute="leading" secondItem="Hxd-BP-OLa" secondAttribute="leading" constant="15" id="phd-dd-AEL"/>
+                                                <constraint firstItem="CAv-gd-n8R" firstAttribute="leading" secondItem="qxs-46-Kki" secondAttribute="trailing" constant="15" id="zge-hx-dhs"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="BackgroundColor"/>
                                         <color key="tintColor" name="PrimaryColor"/>
                                         <connections>
                                             <outlet property="currencyLabel" destination="qxs-46-Kki" id="TbJ-ZW-LWo"/>
+                                            <outlet property="currencyNameLabel" destination="CAv-gd-n8R" id="HVA-GK-zq9"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -297,7 +319,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="VQv-Ns-hpU"/>
                     <connections>
-                        <outlet property="tableView" destination="cGh-YE-BGT" id="X39-Dr-QiQ"/>
+                        <outlet property="tableView" destination="cGh-YE-BGT" id="MTM-8m-P7N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -324,7 +346,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="qsQ-Tg-4iT"/>
+        <segue reference="RZq-a0-GEH"/>
     </inferredMetricsTieBreakers>
     <resources>
         <namedColor name="BackgroundColor">

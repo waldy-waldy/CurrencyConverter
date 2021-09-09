@@ -2,6 +2,18 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/neoviso/Desktop/Tasks/CurrencyConverter/CurrencyConverter/CurrentCurrency+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/neoviso/Desktop/Tasks/CurrencyConverter/CurrencyConverter/CurrentCurrency+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/neoviso/Desktop/Tasks/CurrencyConverter/CurrencyConverter/LatestCurrency+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/neoviso/Desktop/Tasks/CurrencyConverter/CurrencyConverter/LatestCurrency+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
       location = "group:/Users/neoviso/Desktop/Tasks/CurrencyConverter/CurrencyConverter/CurrencyEntity+CoreDataClass.swift">
    </FileRef>
    <FileRef
