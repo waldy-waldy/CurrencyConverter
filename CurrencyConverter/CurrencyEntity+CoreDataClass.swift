@@ -2,7 +2,7 @@
 //  CurrencyEntity+CoreDataClass.swift
 //  
 //
-//  Created by neoviso on 9/8/21.
+//  Created by neoviso on 9/10/21.
 //
 //
 

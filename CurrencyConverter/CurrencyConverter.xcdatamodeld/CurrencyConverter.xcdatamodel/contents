@@ -17,7 +17,7 @@
     </entity>
     <elements>
         <element name="CurrencyEntity" positionX="-63" positionY="-18" width="128" height="88"/>
-        <element name="LatestCurrency" positionX="-63" positionY="9" width="128" height="88"/>
         <element name="CurrentCurrency" positionX="-63" positionY="18" width="128" height="88"/>
+        <element name="LatestCurrency" positionX="-63" positionY="9" width="128" height="88"/>
     </elements>
 </model>

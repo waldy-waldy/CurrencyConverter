@@ -111,25 +111,27 @@ class ConverterViewController: UIViewController, UITextFieldDelegate {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         loadingNotification.label.text = "Loading..."
-        AF.request(self.url).responseJSON { [self] response in
-            switch response.result {
-                case .success(let value):
-                    if let data = value as? [String: Any] {
-                        clearItems()
-                        createItem(newItem: CurrencyInfo(code: "BYN", rate: 1.00, name: "Belarussian Ruble"))
-                        for item in data.keys {
-                            let info = data[item] as? [String: Any]
-                            let code = info?["code"] as! String
-                            let name = info?["name"] as! String
-                            let rate = info?["inverseRate"] as! Double
-                            let currencyTemp = CurrencyInfo(code: code, rate: rate, name: name)
-                            createItem(newItem: currencyTemp)
+        DispatchQueue.main.async {
+            AF.request(self.url).responseJSON { [self] response in
+                switch response.result {
+                    case .success(let value):
+                        if let data = value as? [String: Any] {
+                            clearItems()
+                            createItem(newItem: CurrencyInfo(code: "BYN", rate: 1.00, name: "Belarussian Ruble"))
+                            for item in data.keys {
+                                let info = data[item] as? [String: Any]
+                                let code = info?["code"] as! String
+                                let name = info?["name"] as! String
+                                let rate = info?["inverseRate"] as! Double
+                                let currencyTemp = CurrencyInfo(code: code, rate: rate, name: name)
+                                createItem(newItem: currencyTemp)
+                            }
                         }
-                    }
-                    loadingNotification.hide(animated: true)
-                    takeData()
-                case .failure(_):
-                    loadingNotification.hide(animated: true)
+                        loadingNotification.hide(animated: true)
+                        takeData()
+                    case .failure(_):
+                        loadingNotification.hide(animated: true)
+                }
             }
         }
     }
@@ -286,6 +288,7 @@ class ConverterViewController: UIViewController, UITextFieldDelegate {
         let tempItem = CurrencyEntity(context: context)
         tempItem.code = newItem.code
         tempItem.rate = newItem.rate
+        tempItem.name = newItem.name
         
         do {
             try context.save()

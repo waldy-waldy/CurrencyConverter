@@ -2,7 +2,7 @@
 //  LatestCurrency+CoreDataClass.swift
 //  
 //
-//  Created by neoviso on 9/9/21.
+//  Created by neoviso on 9/10/21.
 //
 //
 

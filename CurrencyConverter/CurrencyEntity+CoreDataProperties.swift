@@ -2,7 +2,7 @@
 //  CurrencyEntity+CoreDataProperties.swift
 //  
 //
-//  Created by neoviso on 9/8/21.
+//  Created by neoviso on 9/10/21.
 //
 //
 
@@ -17,7 +17,7 @@ extension CurrencyEntity {
     }
 
     @NSManaged public var code: String?
-    @NSManaged public var rate: Double
     @NSManaged public var name: String?
+    @NSManaged public var rate: Double
 
 }

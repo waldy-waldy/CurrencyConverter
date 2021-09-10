@@ -83,6 +83,7 @@ class CurrencyListViewController: UIViewController, UITableViewDelegate, UITable
             currency[1].currencyList?.removeAll()
             currencyList = try context.fetch(CurrencyEntity.fetchRequest())
             for item in currencyList {
+                print(item.code)
                 currency[1].currencyList?.append(CurrencyMainInfo(code: item.code!, name: item.name!, date: nil))
                 allCurrency.append(item.code!)
             }
